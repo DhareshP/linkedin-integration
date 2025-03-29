@@ -1,16 +1,12 @@
 package com.techeazy.linkedIn.service;
 
 import com.techeazy.linkedIn.dto.LinkedInPostDTO;
-import com.techeazy.linkedIn.entity.LinkedInPost;
-import com.techeazy.linkedIn.repository.LinkedInRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,17 +14,13 @@ public class LinkedInService {
 
     private final RestTemplate restTemplate;
 
-    @Autowired
-    private final LinkedInRepo postRepository;
-
     @Value("${linkedin.access.token}")
     private String accessToken;
 
     @Value("${linkedin.api.url}")
     private String LINKEDIN_API_URL;
 
-
-    public LinkedInPost createPost(String userId, LinkedInPostDTO postDTO, String accessToken) {
+    public String createPost(String userId, LinkedInPostDTO postDTO, String accessToken) {
         String url = LINKEDIN_API_URL + "ugcPosts";
 
         HttpHeaders headers = new HttpHeaders();
@@ -46,11 +38,7 @@ public class LinkedInService {
         ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            LinkedInPost post = new LinkedInPost();
-            post.setUserId(userId);
-            post.setContent(postDTO.getContent());
-            post.setGroupId(postDTO.getGroupId());
-            return postRepository.save(post);
+            return response.getBody();
         } else {
             throw new RuntimeException("Failed to create LinkedIn post: " + response.getBody());
         }
@@ -93,15 +81,34 @@ public class LinkedInService {
         return "Failed to delete post.";
     }
 
-    public LinkedInPost updatePost(String postUrn, String newMessage, String authorUrn) {
-        // Delete the existing post
-        deletePost(postUrn);
-        // Create a new LinkedInPostDTO from the newMessage
-        LinkedInPostDTO newPostDTO = new LinkedInPostDTO();
-        newPostDTO.setContent(newMessage);
-        return createPost(authorUrn, newPostDTO, accessToken);
+    public String updatePost(String postUrn, String newMessage, String authorUrn) {
+        try {
+            String url = LINKEDIN_API_URL + "ugcPosts/" + postUrn;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + accessToken);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            String requestBody = "{ " +
+                    "\"author\": \"" + authorUrn + "\", " +
+                    "\"lifecycleState\": \"PUBLISHED\", " +
+                    "\"specificContent\": { \"com.linkedin.ugc.ShareContent\": { " +
+                    "\"shareCommentary\": { \"text\": \"" + newMessage + "\" }, " +
+                    "\"shareMediaCategory\": \"NONE\" } }, " +
+                    "\"visibility\": { \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\" }" +
+                    "}";
+
+            HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, entity, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return "Post updated successfully. Response: " + response.getBody();
+            } else {
+                return "Failed to update the post: " + response.getBody();
+            }
+        } catch (Exception e) {
+            return "Exception occurred: " + e.getMessage();
+        }
     }
-
-
 }
 

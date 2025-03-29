@@ -1,9 +1,9 @@
 package com.techeazy.linkedIn.controller;
 
 import com.techeazy.linkedIn.dto.LinkedInPostDTO;
-import com.techeazy.linkedIn.entity.LinkedInPost;
 import com.techeazy.linkedIn.service.LinkedInService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,54 +16,55 @@ public class LinkedInController {
 
 
     @PostMapping("/createPost")
-    public LinkedInPost createPersonalPost(@RequestParam String userId,
-                                           @RequestParam String accessToken,
-                                           @RequestBody LinkedInPostDTO postDTO) {
-        return linkedInService.createPost(userId, postDTO, accessToken);
+    public ResponseEntity<String> createPersonalPost(@RequestParam String userId,
+                                                     @RequestParam String accessToken,
+                                                     @RequestBody LinkedInPostDTO postDTO) {
+        String response = linkedInService.createPost(userId, postDTO, accessToken);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/createOrgPost")
-    public LinkedInPost createOrganizationPost(@RequestParam String orgId,
-                                               @RequestParam String accessToken,
-                                               @RequestBody LinkedInPostDTO postDTO) {
-        // Reuse the createPost method by passing the organization URN as the userId parameter.
-        String organizationUrn = orgId; // assume orgId already contains the organization URN if not, prepend "urn:li:organization:"
-        return linkedInService.createPost(organizationUrn, postDTO, accessToken);
+    public ResponseEntity<String> createOrganizationPost(@RequestParam String orgId,
+                                                         @RequestParam String accessToken,
+                                                         @RequestBody LinkedInPostDTO postDTO) {
+        String response = linkedInService.createPost(orgId, postDTO, accessToken);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/createGroupPost")
-    public LinkedInPost createGroupPost(@RequestParam String groupId,
-                                        @RequestParam String accessToken,
-                                        @RequestBody LinkedInPostDTO postDTO) {
-        // For groups, we assume the group URN is "urn:li:group:" + groupId
+    public ResponseEntity<String> createGroupPost(@RequestParam String groupId,
+                                                  @RequestParam String accessToken,
+                                                  @RequestBody LinkedInPostDTO postDTO) {
         String groupUrn = "urn:li:group:" + groupId;
-        // You can reuse the same createPost method.
-        // Note: LinkedIn Groups API is restricted – ensure your app is allowed to post in groups.
-        return linkedInService.createPost(groupUrn, postDTO, accessToken);
+        String response = linkedInService.createPost(groupUrn, postDTO, accessToken);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")
-    public String getMyProfile() {
-        return linkedInService.getMyProfile();
+    public ResponseEntity<String> getMyProfile() {
+        String response = linkedInService.getMyProfile();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/profile")
-    public String getUserProfile(@RequestParam String userId, @RequestParam String accessToken) {
-        return linkedInService.getUserProfile(userId, accessToken);
+    public ResponseEntity<String> getUserProfile(@RequestParam String userId, @RequestParam String accessToken) {
+        String response = linkedInService.getUserProfile(userId, accessToken);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/deletePost")
-    public String deletePost(@RequestParam String postUrn) {
-        return linkedInService.deletePost(postUrn);
+    public ResponseEntity<String> deletePost(@RequestParam String postUrn) {
+        String response = linkedInService.deletePost(postUrn);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/updatePost")
-    public LinkedInPost updatePost(@RequestParam String postUrn,
-                                   @RequestParam String userId,
-                                   @RequestParam String accessToken,
-                                   @RequestParam String newMessage) {
+    public ResponseEntity<String> updatePost(@RequestParam String postUrn,
+                                             @RequestParam String userId,
+                                             @RequestParam String accessToken,
+                                             @RequestParam String newMessage) {
         String authorUrn = "urn:li:person:" + userId;
-        return linkedInService.updatePost(postUrn, newMessage, authorUrn);
+        String response = linkedInService.updatePost(postUrn, newMessage, authorUrn);
+        return ResponseEntity.ok(response);
     }
 }
-
