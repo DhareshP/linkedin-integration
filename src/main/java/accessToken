@@ -5,6 +5,15 @@
     "token_type": "Bearer",
     "id_token": "eyJ6aXAiOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImQ5Mjk2NjhhLWJhYjEtNGM2OS05NTk4LTQzNzMxNDk3MjNmZiIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJodHRwczovL3d3dy5saW5rZWRpbi5jb20vb2F1dGgiLCJhdWQiOiI3N2VnOWpkYWdrczB1OSIsImlhdCI6MTc0MzI2NDkwNSwiZXhwIjoxNzQzMjY4NTA1LCJzdWIiOiJjamdKRV8zRTU4IiwibmFtZSI6IkRoYXJlc2ggUG9saXNoaSIsImdpdmVuX25hbWUiOiJEaGFyZXNoIiwiZmFtaWx5X25hbWUiOiJQb2xpc2hpIiwicGljdHVyZSI6Imh0dHBzOi8vbWVkaWEubGljZG4uY29tL2Rtcy9pbWFnZS92Mi9ENEQwM0FRR3k2MVV5b1BYTDRnL3Byb2ZpbGUtZGlzcGxheXBob3RvLXNocmlua18xMDBfMTAwL3Byb2ZpbGUtZGlzcGxheXBob3RvLXNocmlua18xMDBfMTAwLzAvMTczMTczNzUzNzI0NT9lPTIxNDc0ODM2NDcmdj1iZXRhJnQ9Sy1fNlNvcGh0MU5PNTg2YUk2Y1F6TzhldGwzbXR6d0RodjBadDNZUmI4ayIsImVtYWlsIjoiZGhhcmVzaC5hLnBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOiJ0cnVlIiwibG9jYWxlIjoiZW5fVVMifQ.UNVP0WvwJ-vKd_-dSYdJk7BjjrHAJG7t8vXkNdVidy1l17Tem5CSaysf5oowYCmnc7sDLV4oJNEDe24JUDgef2bYe3ov0PFdQ2aGFkPnRX0KmNHNDd4awhI6TXGnbsmd5HxPXNPgwFWlQO4p2OAtPD4SbWJWTZx1Fa4Y-CsMZpdbqHnPmgZZt_wwJTWhkEdIImB5ByCv2jTUinN4ZGWzPropkicNlLMFIbZMnsbpvtTePtKtNV7GeAxzuV7g5m3AwkTl6yhu8xdl1mtIaKw8VLFkzWrrbF0uAjRsIEcUhSxF0zux-IHFwUErbGvLJo2pXx3kN4ZVFma3JN_7j7FScfb_ECCEUPAYx2qD7DfNwl-APLCPKvRoJLZX9x5pisU4M84BfLIzKUaVBjpwg2twGwsUq5U47UOYhJGvTK2cXpaNqPZCSJAnXqFamfE98dryihzTUoJmpF2AkseViXceSVxl7QrgsWp1fM_yjohGR8F1fWLQ2R0N_mY8cHJmEmTf0zt3ixN1h9m5MufWqbL0hWHvPt_-fBa4D9lkd766TFAg2lasGtPnfHZ_KzO6eE5zZRpnXuTDPx-SkQEYL49JBO1_obQWMJ4aVXSCZcYnOuWOebi49YNes8rY-pHjFt80HwSz09HZo7dG-6ak76q3r9GyhDbsTKss6bQp8TlHBbQ"
 }
+linkedin member Id: 1139195033
+
+
+Different Posting Destinations:
+
+Organization Post: If you want to post on an organization page, you would set the author to something like "urn:li:organization:ORG_ID".
+
+Group Post: Similarly, for a group, the author would be "urn:li:group:GROUP_ID" (if your application is approved for group posting).
+
 
 URL to get the authorization code (grant_type_code):
 https://www.linkedin.com/oauth/v2/authorization?
@@ -12,6 +21,18 @@ response_type=code&
 client_id=77eg9jdagks0u9&
 redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback&
 scope=openid%20profile%20email%20w_member_social
+
+// ALTER these scope=openid%20r_liteprofile%20email%20w_member_social%20w_organization_social as per requirements and get new accessToken
+https://www.linkedin.com/oauth/v2/authorization?
+response_type=code&
+client_id=77eg9jdagks0u9&
+redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback&
+scope=openid%20r_liteprofile%20email%20w_member_social%20w_organization_social
+
+https://www.linkedin.com/oauth/v2/authorization?response_type=code
+&client_id=77eg9jdagks0u9&redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback&state=foobar
+&scope=liteprofile%20emailaddress%20w_member_social
+
 
 
 api's
